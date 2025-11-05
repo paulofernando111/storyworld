@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados da Pesquisa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Resultados</h1>
+  <div id="results"></div>
+  <a href="index.html">Voltar à Página Inicial</a>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('query')?.toLowerCase() || '';
+
+    const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+
+    const filtered = stories.filter(story =>
+      story.title.toLowerCase().includes(query) ||
+      story.topic.toLowerCase().includes(query)
+    );
+
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = filtered.length
+      ? filtered.map(story => `
+        <div style="margin-bottom:20px;">
+          <img src="${story.coverUrl}" alt="${story.title}" width="100">
+          <h3>${story.title}</h3>
+          <p>${story.chapters[0] || 'Sem resumo'}</p>
+          <small>Tópico: ${story.topic || 'Sem tópico'}</small>
+        </div>
+      `).join('')
+      : '<p>Nenhuma história encontrada.</p>';
+  </script>
+</body>
+</html>
