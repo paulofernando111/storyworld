@@ -3,86 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Perfil - StoryWorld</title>
-  <link rel="stylesheet" href="perfil.css">
+  <title>Meu Perfil | StoryWorld</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- ✅ NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="logo">StoryWorld</a>
+  <ul class="nav-links">
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="writer.html">Escrever</a></li>
+    <li><a href="search.html">Buscar</a></li>
+  </ul>
+  <div id="nav-account"></div>
+</nav>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <a href="index.html" class="logo">StoryWorld</a>
-    <ul class="nav-links">
-      <li><a href="catalog.html">Catálogo</a></li>
-      <li><a href="writer.html">Escrever</a></li>
-      <li><a href="search.html">Buscar</a></li>
-    </ul>
-    <div id="nav-account">
-      <button onclick="window.location.href='login.html'">Sair</button>
-    </div>
-  </nav>
+<!-- ✅ CAPA DO PERFIL -->
+<div class="profile-header">
+  <img id="profile-cover" class="profile-cover" src="https://via.placeholder.com/1200x350" alt="Capa do perfil">
+  <label for="upload-cover" class="btn-edit-cover">✏️ Alterar capa</label>
+  <input type="file" id="upload-cover" accept="image/*" hidden>
+</div>
 
-  <!-- CAPA E FOTO DE PERFIL -->
-  <section class="profile-header">
-    <img id="profile-cover" class="profile-cover" src="" alt="Capa do usuário">
-    <label class="cover-upload-btn">
-      📷
-      <input type="file" id="upload-cover" accept="image/*" hidden>
-    </label>
+<!-- ✅ SEÇÃO PRINCIPAL -->
+<section class="profile-main">
+  <img id="profile-img" class="profile-avatar" src="https://via.placeholder.com/120" alt="Foto do usuário">
 
-    <div class="profile-info">
-      <img id="profile-img" class="profile-photo" src="" alt="Foto do usuário">
-      <label class="photo-upload-btn">
-        📷
-        <input type="file" id="upload-photo" accept="image/*" hidden>
-      </label>
-      <h2 id="display-username">Usuário</h2>
-      <p id="display-email">email@exemplo.com</p>
-      <p id="display-bio">Aqui vai a bio do usuário...</p>
-      <button onclick="openEditModal()">Editar Perfil ✏️</button>
-    </div>
-  </section>
-
-  <!-- TABS DO PERFIL -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="openTab(event, 'tab-historias')">Histórias Publicadas</button>
-    <button class="tab-btn" onclick="openTab(event, 'tab-favoritas')">Favoritas ❤️</button>
-    <button class="tab-btn" onclick="openTab(event, 'tab-playlists')">Playlists 📚</button>
+  <div class="user-info">
+    <h2 id="display-username">Nome do Usuário</h2>
+    <p id="display-email" class="user-email"></p>
+    <p id="display-bio" class="user-bio"></p>
   </div>
 
-  <!-- CONTEÚDO DAS TABS -->
-  <div id="tab-historias" class="tab-content active">
-    <h3>Suas Histórias</h3>
-    <p>Nenhuma história publicada ainda.</p>
-  </div>
+  <button class="btn-edit-profile" onclick="openEditModal()">Editar Perfil</button>
+</section>
 
-  <div id="tab-favoritas" class="tab-content">
-    <h3>Histórias Favoritas</h3>
-    <p>Você ainda não favoritou nenhuma história.</p>
-  </div>
+<!-- ✅ ABA DE NAVEGAÇÃO -->
+<div class="profile-tabs">
+  <button class="tab-btn active" onclick="openTab(event, 'stories')">📚 Minhas Histórias</button>
+  <button class="tab-btn" onclick="openTab(event, 'favorites')">❤️ Favoritas</button>
+  <button class="tab-btn" onclick="openTab(event, 'playlists')">🎧 Playlists</button>
+</div>
 
-  <div id="tab-playlists" class="tab-content">
-    <h3>Suas Playlists</h3>
-    <p>Crie coleções com suas histórias favoritas!</p>
-  </div>
+<!-- ✅ CONTEÚDOS -->
+<div id="stories" class="tab-content active">
+  <p>Você ainda não publicou nenhuma história.</p>
+</div>
 
-  <!-- MODAL PARA EDITAR PERFIL -->
-  <div id="editProfileModal" class="modal">
-    <div class="modal-content">
-      <h2>Editar Perfil</h2>
-      <label>Nome de usuário:</label>
-      <input type="text" id="edit-username">
-      
-      <label>Bio:</label>
-      <textarea id="edit-bio" rows="3"></textarea>
-      
-      <div class="modal-actions">
-        <button onclick="saveProfile()">Salvar</button>
-        <button onclick="closeEditModal()">Cancelar</button>
-      </div>
+<div id="favorites" class="tab-content">
+  <p>Nenhuma história favorita ainda.</p>
+</div>
+
+<div id="playlists" class="tab-content">
+  <p>Você ainda não criou nenhuma playlist.</p>
+</div>
+
+<!-- ✅ MODAL DE EDIÇÃO -->
+<div id="editProfileModal" class="modal">
+  <div class="modal-content">
+    <h3>Editar Perfil</h3>
+
+    <label>Nome de Usuário</label>
+    <input type="text" id="edit-username">
+
+    <label>Biografia</label>
+    <textarea id="edit-bio" rows="3"></textarea>
+
+    <label>Alterar Foto de Perfil</label>
+    <input type="file" id="upload-photo" accept="image/*">
+
+    <div class="modal-actions">
+      <button onclick="saveProfile()">Salvar</button>
+      <button class="cancel-btn" onclick="closeEditModal()">Cancelar</button>
     </div>
   </div>
+</div>
 
-  <script src="perfil.js"></script>
-  <script src="auth.js"></script>
+<script src="auth.js"></script>
+<script>
+  // ✅ Carregar usuário
+  document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("sw_user"));
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+    document.getElementById("display-username").textContent = user.username;
+    document.getElementById("display-email").textContent = user.email;
+    document.getElementById("display-bio").textContent = user.bio || "";
+    document.getElementById("profile-img").src = user.photo || "https://via.placeholder.com/120";
+    document.getElementById("profile-cover").src = user.cover || "https://via.placeholder.com/1200x350";
+  });
+
+  // ✅ Modal de edição
+  function openEditModal() {
+    const user = JSON.parse(localStorage.getItem("sw_user"));
+    document.getElementById("edit-username").value = user.username;
+    document.getElementById("edit-bio").value = user.bio || "";
+    document.getElementById("editProfileModal").style.display = "flex";
+  }
+  function closeEditModal() {
+    document.getElementById("editProfileModal").style.display = "none";
+  }
+  function saveProfile() {
+    let user = JSON.parse(localStorage.getItem("sw_user"));
+    user.username = document.getElementById("edit-username").value;
+    user.bio = document.getElementById("edit-bio").value;
+    localStorage.setItem("sw_user", JSON.stringify(user));
+    location.reload();
+  }
+
+  // ✅ Salvar foto de perfil
+  document.getElementById("upload-photo").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function () {
+      let user = JSON.parse(localStorage.getItem("sw_user"));
+      user.photo = reader.result;
+      localStorage.setItem("sw_user", JSON.stringify(user));
+      document.getElementById("profile-img").src = reader.result;
+    };
+    if (file) reader.readAsDataURL(file);
+  });
+
+  // ✅ Alterar capa
+  document.getElementById("upload-cover").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function () {
+      let user = JSON.parse(localStorage.getItem("sw_user"));
+      user.cover = reader.result;
+      localStorage.setItem("sw_user", JSON.stringify(user));
+      document.getElementById("profile-cover").src = reader.result;
+    };
+    if (file) reader.readAsDataURL(file);
+  });
+
+  // ✅ Abas do perfil
+  function openTab(evt, tabName) {
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+</script>
 </body>
 </html>
