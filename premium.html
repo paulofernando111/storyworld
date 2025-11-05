@@ -1,72 +1,32 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assinaturas Premium | StoryWorld</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Assinaturas - StoryWorld</title>
 </head>
 <body>
-  <header>
-    <div class="header-content">
-      <h1>Assinaturas Premium</h1>
-      <button id="themeToggle" class="theme-toggle">🌙</button>
-    </div>
-  </header>
-
-  <main>
-    <section style="text-align:center;">
-      <h2>🌟 Escolha seu plano</h2>
-      <p>Desbloqueie recursos exclusivos e apoie nossos escritores favoritos.</p>
-    </section>
-
-    <div class="plans">
-      <div class="plan-card">
-        <h3>Leitor Casual</h3>
-        <p>Leituras sem anúncios</p>
-        <p class="price">R$9,90/mês</p>
-        <button>Assinar</button>
-      </div>
-
-      <div class="plan-card highlight">
-        <h3>Leitor Premium</h3>
-        <p>Acesso antecipado e badges exclusivos</p>
-        <p class="price">R$19,90/mês</p>
-        <button>Assinar</button>
-      </div>
-
-      <div class="plan-card">
-        <h3>Escritor Pro</h3>
-        <p>Monetize suas histórias e tenha destaque</p>
-        <p class="price">R$29,90/mês</p>
-        <button>Assinar</button>
-      </div>
-    </div>
-
-    <nav>
-      <a href="index.html">🏠 Início</a>
-      <a href="catalog.html">📚 Catálogo</a>
-    </nav>
-  </main>
-
-  <footer>
-    <p>© 2025 StoryWorld — Junte-se à comunidade premium ✨</p>
-  </footer>
+  <h2>Assinaturas Premium</h2>
+  <p>Assine para desbloquear recursos especiais!</p>
+  <button onclick="becomePremium()">Ativar Premium</button>
 
   <script>
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      body.classList.add('dark-mode');
-      themeToggle.textContent = '☀️';
+    function becomePremium(){
+      let user = JSON.parse(localStorage.getItem('currentUser'));
+      if(user){
+        user.premium = true;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        // Atualiza lista de usuários
+        let users = JSON.parse(localStorage.getItem('users') || '[]');
+        users = users.map(u => u.email === user.email ? user : u);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        alert("Premium ativado!");
+      } else {
+        alert("Faça login primeiro!");
+        window.location.href="login.html";
+      }
     }
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      const isDark = body.classList.contains('dark-mode');
-      themeToggle.textContent = isDark ? '☀️' : '🌙';
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
   </script>
 </body>
 </html>
