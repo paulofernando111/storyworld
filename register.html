@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrar | StoryWorld</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">StoryWorld</a>
+    <ul class="nav-links"><li><a href="catalog.html">Catálogo</a></li></ul>
+    <div id="nav-account"></div>
+  </nav>
+
+  <main class="login-container">
+    <form id="registerForm" class="login-box">
+      <h2 class="login-title">Criar Conta</h2>
+
+      <label>Nome de usuário</label>
+      <input type="text" name="username" placeholder="Seu nome público" required>
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="seu@exemplo.com" required>
+
+      <label>Senha</label>
+      <input type="password" name="password" placeholder="Crie uma senha" required>
+
+      <label>Confirmar senha</label>
+      <input type="password" name="password2" placeholder="Repita a senha" required>
+
+      <button type="submit" class="login-btn">Registrar</button>
+
+      <p class="login-footer">Já tem conta? <a href="login.html">Entrar</a></p>
+    </form>
+  </main>
+
+  <script>
+    // registro simples em localStorage (sem hashing) — adequado apenas para protótipo
+    document.getElementById("registerForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const username = fd.get("username").trim();
+      const email = fd.get("email").trim().toLowerCase();
+      const password = fd.get("password");
+      const password2 = fd.get("password2");
+
+      if (password !== password2) {
+        alert("As senhas não coincidem.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("sw_users") || "[]");
+      if (users.find(u => u.email === email)) {
+        alert("Já existe uma conta com esse email.");
+        return;
+      }
+
+      const newUser = {
+        id: Date.now(),
+        username,
+        email,
+        password, // nota: em produção NÃO guardar senha em texto puro
+        bio: "",
+        photo: ""
+      };
+      users.push(newUser);
+      localStorage.setItem("sw_users", JSON.stringify(users));
+
+      // logar automaticamente
+      localStorage.setItem("sw_user", JSON.stringify(newUser));
+      alert("Conta criada com sucesso!");
+      window.location.href = "index.html";
+    });
+  </script>
+
+  <script src="auth.js"></script>
+</body>
+</html>
