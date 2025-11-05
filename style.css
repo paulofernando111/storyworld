@@ -321,3 +321,42 @@ body.dark-mode footer {
   font-weight: 600;
   cursor: pointer;
 }
+/* ==== PLANOS PREMIUM ==== */
+.plans {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.plan-card {
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+  border-radius: 15px;
+  padding: 20px;
+  width: 250px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+}
+
+.plan-card h3 {
+  color: var(--primary);
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 10px;
+}
+
+.plan-card .price {
+  font-size: 1.4em;
+  color: var(--secondary);
+  margin: 10px 0;
+}
+
+.plan-card.highlight {
+  border: 2px solid var(--primary);
+  background: linear-gradient(135deg, #f8f8ff, #e9ebff);
+}
