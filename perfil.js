@@ -1,85 +1,151 @@
-// ========= VERIFICAR LOGIN =========
-const currentUser = JSON.parse(localStorage.getItem("sw_user"));
-if (!currentUser) {
-  alert("Você precisa estar logado para ver seu perfil!");
-  window.location.href = "login.html";
-}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil | StoryWorld</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// ========= CARREGAR DADOS DO PERFIL =========
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("profile-username").innerText = currentUser.username;
-  document.getElementById("profile-email").innerText = currentUser.email;
-  document.getElementById("profile-bio").innerText = currentUser.bio || "Nenhuma bio adicionada ainda...";
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="logo">StoryWorld</a>
+  <ul class="nav-links">
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="writer.html">Escrever</a></li>
+    <li><a href="search.html">Buscar</a></li>
+  </ul>
+  <div id="nav-account"></div>
+</nav>
 
-  // Carregar foto de perfil e banner, se existirem
-  if (currentUser.photo) {
-    document.getElementById("profile-photo").src = currentUser.photo;
-  }
-  if (currentUser.banner) {
-    document.getElementById("banner-img").src = currentUser.banner;
-  }
+<!-- CAPA DO PERFIL -->
+<div class="profile-header">
+  <img id="profile-cover" src="https://via.placeholder.com/1200x300" alt="Capa do Perfil">
+  <label for="upload-cover" class="edit-cover-btn">Alterar Capa</label>
+  <input type="file" id="upload-cover" accept="image/*" style="display: none;">
+</div>
 
-  // Coloca valores no formulário de edição
-  document.getElementById("edit-username").value = currentUser.username;
-  document.getElementById("edit-bio").value = currentUser.bio || "";
-});
+<!-- INFOS DO PERFIL -->
+<div class="profile-info">
+  <img id="profile-img" class="profile-avatar" src="https://via.placeholder.com/120" alt="Foto de perfil">
+  <div class="user-details">
+    <h2 id="display-username">Nome do Usuário</h2>
+    <p id="display-email" class="user-email"></p>
+    <p id="display-bio" class="user-bio"></p>
+  </div>
+  <button class="edit-profile-btn" onclick="openEditModal()">Editar Perfil</button>
+</div>
 
-// ========= TROCA DE ABAS =========
-const tabButtons = document.querySelectorAll(".tab-btn");
-const tabContent = document.querySelectorAll(".tab-content");
+<!-- ABAS DO PERFIL -->
+<div class="profile-tabs">
+  <button class="tab-btn active" onclick="openTab(event, 'stories')">📚 Minhas Histórias</button>
+  <button class="tab-btn" onclick="openTab(event, 'favorites')">❤️ Favoritas</button>
+  <button class="tab-btn" onclick="openTab(event, 'playlists')">🎧 Playlists</button>
+</div>
 
-tabButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    tabButtons.forEach(btn => btn.classList.remove("active"));
-    tabContent.forEach(tab => tab.classList.remove("active"));
+<!-- CONTEÚDOS DAS ABAS -->
+<div id="stories" class="tab-content active">
+  <p>Você ainda não publicou nenhuma história.</p>
+</div>
 
-    button.classList.add("active");
-    document.getElementById(button.getAttribute("data-tab")).classList.add("active");
+<div id="favorites" class="tab-content">
+  <p>Nenhuma história favorita ainda.</p>
+</div>
+
+<div id="playlists" class="tab-content">
+  <p>Você ainda não criou nenhuma playlist.</p>
+</div>
+
+<!-- MODAL DE EDIÇÃO -->
+<div id="editProfileModal" class="modal">
+  <div class="modal-content">
+    <h3>Editar Perfil</h3>
+    <label>Nome de Usuário</label>
+    <input type="text" id="edit-username">
+
+    <label>Biografia</label>
+    <textarea id="edit-bio" rows="3"></textarea>
+
+    <label>Alterar Foto de Perfil</label>
+    <input type="file" id="upload-photo" accept="image/*">
+
+    <div class="modal-actions">
+      <button onclick="saveProfile()">Salvar</button>
+      <button onclick="closeEditModal()" class="cancel-btn">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("sw_user"));
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    document.getElementById("display-username").textContent = user.username;
+    document.getElementById("display-email").textContent = user.email;
+    document.getElementById("display-bio").textContent = user.bio || "";
+    document.getElementById("profile-img").src = user.photo || "https://via.placeholder.com/120";
+    document.getElementById("profile-cover").src = user.cover || "https://via.placeholder.com/1200x300";
   });
-});
 
-// ========= ALTERAR FOTO DE PERFIL =========
-document.getElementById("photo-upload").addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    document.getElementById("profile-photo").src = reader.result;
-    currentUser.photo = reader.result;
-    localStorage.setItem("sw_user", JSON.stringify(currentUser));
-  };
-  reader.readAsDataURL(file);
-});
-
-// ========= ALTERAR FOTO DE CAPA =========
-document.getElementById("banner-upload").addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    document.getElementById("banner-img").src = reader.result;
-    currentUser.banner = reader.result;
-    localStorage.setItem("sw_user", JSON.stringify(currentUser));
-  };
-  reader.readAsDataURL(file);
-});
-
-// ========= SALVAR EDIÇÕES DO PERFIL =========
-document.getElementById("save-profile-btn").addEventListener("click", () => {
-  const newName = document.getElementById("edit-username").value.trim();
-  const newBio = document.getElementById("edit-bio").value.trim();
-
-  if (newName === "") {
-    alert("O nome de usuário não pode estar vazio!");
-    return;
+  function openEditModal() {
+    const user = JSON.parse(localStorage.getItem("sw_user"));
+    document.getElementById("edit-username").value = user.username;
+    document.getElementById("edit-bio").value = user.bio || "";
+    document.getElementById("editProfileModal").style.display = "flex";
   }
 
-  currentUser.username = newName;
-  currentUser.bio = newBio;
+  function closeEditModal() {
+    document.getElementById("editProfileModal").style.display = "none";
+  }
 
-  localStorage.setItem("sw_user", JSON.stringify(currentUser));
+  function saveProfile() {
+    let user = JSON.parse(localStorage.getItem("sw_user"));
+    user.username = document.getElementById("edit-username").value;
+    user.bio = document.getElementById("edit-bio").value;
+    localStorage.setItem("sw_user", JSON.stringify(user));
+    location.reload();
+  }
 
-  document.getElementById("profile-username").innerText = newName;
-  document.getElementById("profile-bio").innerText = newBio || "Nenhuma bio adicionada ainda...";
-  alert("Perfil atualizado com sucesso!");
-});
+  document.getElementById("upload-photo").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function () {
+      let user = JSON.parse(localStorage.getItem("sw_user"));
+      user.photo = reader.result;
+      localStorage.setItem("sw_user", JSON.stringify(user));
+      document.getElementById("profile-img").src = reader.result;
+    };
+    if (file) reader.readAsDataURL(file);
+  });
+
+  document.getElementById("upload-cover").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function () {
+      let user = JSON.parse(localStorage.getItem("sw_user"));
+      user.cover = reader.result;
+      localStorage.setItem("sw_user", JSON.stringify(user));
+      document.getElementById("profile-cover").src = reader.result;
+    };
+    if (file) reader.readAsDataURL(file);
+  });
+
+  function openTab(evt, tabName) {
+    const contents = document.querySelectorAll(".tab-content");
+    const buttons = document.querySelectorAll(".tab-btn");
+
+    contents.forEach(content => content.classList.remove("active"));
+    buttons.forEach(btn => btn.classList.remove("active"));
+
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+</script>
+</body>
+</html>
