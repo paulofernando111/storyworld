@@ -8,18 +8,23 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- NAVBAR (substituir em todas as páginas) -->
 <nav class="navbar">
-    <a href="index.html" class="logo">StoryWorld</a>
-    <ul class="nav-links" id="nav-links">
-        <li><a href="catalog.html">Catálogo</a></li>
-        <li><a href="writer.html">Escrever</a></li>
-        <li><a href="search.html">Buscar</a></li>
-        <li id="login-btn"><a href="login.html">Login</a></li>
-        <li id="profile-btn" style="display:none;"><a href="perfil.html">Perfil</a></li>
-        <li id="logout-btn" style="display:none;"><button onclick="logoutUser()">Sair</button></li>
-    </ul>
+  <a href="index.html" class="logo">StoryWorld</a>
+
+  <ul class="nav-links">
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="writer.html">Escrever</a></li>
+    <li><a href="search.html">Buscar</a></li>
+  </ul>
+
+  <!-- Área de conta / login -->
+  <div id="nav-account">
+    <!-- Caso deslogado, será mostrado botão Entrar (renderizado por auth.js) -->
+    <!-- Caso logado, será substituído por avatar + dropdown -->
+  </div>
 </nav>
+
 
 <!-- LOGIN CONTAINER -->
 <div class="login-container">
