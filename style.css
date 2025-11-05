@@ -360,3 +360,93 @@ body.dark-mode footer {
   border: 2px solid var(--primary);
   background: linear-gradient(135deg, #f8f8ff, #e9ebff);
 }
+/* === LOGIN PAGE STYLES === */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background: #f4f4f4;
+}
+
+.login-box {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.login-box label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-btn:hover {
+    background-color: #184c80;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #fff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.navbar .logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2b6cb0;
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+.nav-links a, .nav-links button {
+    text-decoration: none;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
