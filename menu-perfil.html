@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Usuário | StoryWorld</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="logo">StoryWorld</a>
+
+  <ul class="nav-links">
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="writer.html">Escrever</a></li>
+    <li><a href="search.html">Buscar</a></li>
+  </ul>
+
+  <div id="nav-account"></div>
+</nav>
+
+<!-- CONTAINER DO MENU E CONTEÚDO -->
+<div class="profile-layout">
+    <!-- MENU LATERAL -->
+    <aside class="profile-sidebar">
+        <div class="sidebar-header">
+            <img id="nav-profile-pic" src="https://via.placeholder.com/80" alt="Foto">
+            <h3 id="nav-username">Usuário</h3>
+        </div>
+        <ul>
+            <li><a href="perfil.html">👤 Meu Perfil</a></li>
+            <li><a href="#">📚 Minhas Histórias</a></li>
+            <li><a href="#">❤️ Favoritos</a></li>
+            <li><a href="#">⚙️ Configurações</a></li>
+            <li><a href="#" onclick="logoutUser()">🚪 Sair</a></li>
+        </ul>
+    </aside>
+
+    <!-- ÁREA DE CONTEÚDO -->
+    <main class="profile-content">
+        <h2>Bem-vindo ao seu painel!</h2>
+        <p>Escolha uma opção no menu ao lado para gerenciar sua conta.</p>
+    </main>
+</div>
+
+<script src="auth.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const user = JSON.parse(localStorage.getItem("sw_user"));
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    document.getElementById("nav-username").textContent = user.username;
+    if (user.photo) {
+        document.getElementById("nav-profile-pic").src = user.photo;
+    }
+});
+
+function logoutUser() {
+    localStorage.removeItem("sw_user");
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
