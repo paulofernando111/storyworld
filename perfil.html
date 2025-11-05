@@ -3,113 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil | StoryWorld</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Meu Perfil - StoryWorld</title>
   <link rel="stylesheet" href="perfil.css">
 </head>
 <body>
 
-<!-- ✅ NAVBAR -->
-<nav class="navbar">
-  <a href="index.html" class="logo">StoryWorld</a>
-  <ul class="nav-links">
-    <li><a href="catalog.html">Catálogo</a></li>
-    <li><a href="writer.html">Escrever</a></li>
-    <li><a href="search.html">Buscar</a></li>
-  </ul>
-  <div id="nav-account"></div>
-</nav>
-
-<!-- ✅ CABEÇALHO DO PERFIL -->
-<header class="profile-header">
-  <div class="banner">
-    <img id="banner-img" src="https://via.placeholder.com/1200x300" alt="Capa do Perfil">
-    <input type="file" id="banner-upload" accept="image/*">
-  </div>
-
-  <div class="profile-info">
-    <div class="profile-pic">
-      <img id="profile-photo" src="https://via.placeholder.com/120" alt="Foto de Perfil">
-      <input type="file" id="photo-upload" accept="image/*">
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">StoryWorld</a>
+    <ul class="nav-links">
+      <li><a href="catalog.html">Catálogo</a></li>
+      <li><a href="writer.html">Escrever</a></li>
+      <li><a href="search.html">Buscar</a></li>
+    </ul>
+    <div id="nav-account">
+      <button onclick="window.location.href='login.html'">Sair</button>
     </div>
-    <div>
-      <h2 id="profile-username">Nome do Usuário</h2>
-      <p id="profile-email">@email</p>
-      <p id="profile-bio">Nenhuma bio adicionada ainda...</p>
+  </nav>
+
+  <!-- CAPA E FOTO DE PERFIL -->
+  <section class="profile-header">
+    <img id="profile-cover" class="profile-cover" src="" alt="Capa do usuário">
+    <label class="cover-upload-btn">
+      📷
+      <input type="file" id="upload-cover" accept="image/*" hidden>
+    </label>
+
+    <div class="profile-info">
+      <img id="profile-img" class="profile-photo" src="" alt="Foto do usuário">
+      <label class="photo-upload-btn">
+        📷
+        <input type="file" id="upload-photo" accept="image/*" hidden>
+      </label>
+      <h2 id="display-username">Usuário</h2>
+      <p id="display-email">email@exemplo.com</p>
+      <p id="display-bio">Aqui vai a bio do usuário...</p>
+      <button onclick="openEditModal()">Editar Perfil ✏️</button>
     </div>
+  </section>
 
-    <button id="edit-profile-btn">Editar Perfil</button>
-  </div>
-</header>
-
-<!-- ✅ MENU DO PERFIL -->
-<nav class="profile-menu">
-  <button class="tab-btn active" data-tab="stories">📚 Minhas Histórias</button>
-  <button class="tab-btn" data-tab="favorites">❤️ Favoritas</button>
-  <button class="tab-btn" data-tab="playlists">🎧 Playlists</button>
-  <button class="tab-btn" data-tab="settings">⚙️ Configurações</button>
-</nav>
-
-<!-- ✅ CONTEÚDO DAS ABAS -->
-<section id="tab-content">
-  <div id="stories" class="tab-content active">
-    <p>Suas histórias aparecerão aqui.</p>
+  <!-- TABS DO PERFIL -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'tab-historias')">Histórias Publicadas</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-favoritas')">Favoritas ❤️</button>
+    <button class="tab-btn" onclick="openTab(event, 'tab-playlists')">Playlists 📚</button>
   </div>
 
-  <div id="favorites" class="tab-content">
-    <p>Histórias favoritas aparecerão aqui.</p>
+  <!-- CONTEÚDO DAS TABS -->
+  <div id="tab-historias" class="tab-content active">
+    <h3>Suas Histórias</h3>
+    <p>Nenhuma história publicada ainda.</p>
   </div>
 
-  <div id="playlists" class="tab-content">
-    <p>Suas playlists de histórias aparecerão aqui.</p>
+  <div id="tab-favoritas" class="tab-content">
+    <h3>Histórias Favoritas</h3>
+    <p>Você ainda não favoritou nenhuma história.</p>
   </div>
 
-  <div id="settings" class="tab-content">
-    <h3>Editar informações do perfil</h3>
-    <label>Nome de usuário:</label>
-    <input type="text" id="edit-username">
-
-    <label>Bio:</label>
-    <textarea id="edit-bio" placeholder="Escreva algo sobre você..."></textarea>
-
-    <button id="save-profile-btn">Salvar</button>
+  <div id="tab-playlists" class="tab-content">
+    <h3>Suas Playlists</h3>
+    <p>Crie coleções com suas histórias favoritas!</p>
   </div>
-</section>
 
-<script src="perfil.js"></script>
-<script src="auth.js"></script>
+  <!-- MODAL PARA EDITAR PERFIL -->
+  <div id="editProfileModal" class="modal">
+    <div class="modal-content">
+      <h2>Editar Perfil</h2>
+      <label>Nome de usuário:</label>
+      <input type="text" id="edit-username">
+      
+      <label>Bio:</label>
+      <textarea id="edit-bio" rows="3"></textarea>
+      
+      <div class="modal-actions">
+        <button onclick="saveProfile()">Salvar</button>
+        <button onclick="closeEditModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="perfil.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
-// ================== EXIBIR HISTÓRIAS DO USUÁRIO ==================
-function carregarMinhasHistorias() {
-  const user = JSON.parse(localStorage.getItem("sw_user"));
-  if (!user) return;
-
-  const stories = JSON.parse(localStorage.getItem("stories")) || [];
-  const minhas = stories.filter(s => s.author === user.email);
-
-  const container = document.getElementById("stories");
-  container.innerHTML = ""; // Limpa antes de inserir
-
-  if (minhas.length === 0) {
-    container.innerHTML = "<p>Você ainda não publicou nenhuma história.</p>";
-    return;
-  }
-
-  minhas.forEach(story => {
-    const card = document.createElement("div");
-    card.classList.add("story-card");
-
-    card.innerHTML = `
-      <img src="${story.cover || 'https://via.placeholder.com/200'}" alt="Capa da história">
-      <h3>${story.title}</h3>
-      <p>${story.description || 'Sem descrição...'}</p>
-      <button onclick="window.location.href='view.html?id=${story.id}'">Ler ➝</button>
-    `;
-
-    container.appendChild(card);
-  });
-}
-
-// Chama ao carregar a página
-document.addEventListener("DOMContentLoaded", carregarMinhasHistorias);
