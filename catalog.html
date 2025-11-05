@@ -2,37 +2,79 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Catálogo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Histórias | StoryWorld</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Catálogo de Histórias</h1>
-  <div id="catalog"></div>
-  <a href="index.html">Voltar à Página Inicial</a>
+  <header>
+    <div class="header-content">
+      <h1>Catálogo de Histórias</h1>
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="filter-box">
+      <input type="text" id="filterInput" placeholder="Filtrar por título ou gênero...">
+      <button onclick="filterStories()">🔍 Buscar</button>
+    </div>
+
+    <div id="catalogContainer"></div>
+
+    <nav>
+      <a href="index.html">🏠 Início</a>
+      <a href="writer.html">✍️ Escrever</a>
+    </nav>
+  </main>
+
+  <footer>
+    <p>© 2025 StoryWorld — Explore infinitos mundos de leitura</p>
+  </footer>
 
   <script>
-    const stories = JSON.parse(localStorage.getItem('stories') || '[]');
-    const grouped = stories.reduce((acc, story) => {
-      if (!acc[story.topic]) acc[story.topic] = [];
-      acc[story.topic].push(story);
-      return acc;
-    }, {});
-
-    const catalogDiv = document.getElementById('catalog');
-    let html = '';
-    for (const topic in grouped) {
-      html += `<h2>${topic}</h2><div>`;
-      grouped[topic].forEach(story => {
-        html += `
-          <div style="display:inline-block; margin:10px;">
-            <img src="${story.coverUrl}" alt="${story.title}" width="100"><br>
-            <b>${story.title}</b>
-          </div>
-        `;
-      });
-      html += '</div>';
+    // ==== Dark mode reaproveitado ====
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+      themeToggle.textContent = '☀️';
     }
-    catalogDiv.innerHTML = html;
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // ==== Mostrar histórias ====
+    const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+    const container = document.getElementById('catalogContainer');
+
+    function renderStories(list) {
+      container.innerHTML = list.length ? list.map(story => `
+        <div class="story-card">
+          <img src="${story.coverUrl || 'https://via.placeholder.com/100x140?text=Capa'}" alt="${story.title}">
+          <div>
+            <h3>${story.title}</h3>
+            <p><strong>Gênero:</strong> ${story.topic || 'Sem gênero'}</p>
+            <p>${story.chapters[0]?.substring(0, 100) || 'Sem descrição...'}...</p>
+          </div>
+        </div>
+      `).join('') : '<p>Nenhuma história encontrada.</p>';
+    }
+
+    function filterStories() {
+      const query = document.getElementById('filterInput').value.toLowerCase();
+      const filtered = stories.filter(story =>
+        story.title.toLowerCase().includes(query) ||
+        story.topic.toLowerCase().includes(query)
+      );
+      renderStories(filtered);
+    }
+
+    renderStories(stories);
   </script>
 </body>
 </html>
