@@ -1,108 +1,109 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil | StoryWorld</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil | StoryWorld</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAVBAR (substituir em todas as páginas) -->
+<!-- NAVBAR (igual em todas as páginas, gerenciado pelo auth.js) -->
 <nav class="navbar">
   <a href="index.html" class="logo">StoryWorld</a>
-
   <ul class="nav-links">
     <li><a href="catalog.html">Catálogo</a></li>
     <li><a href="writer.html">Escrever</a></li>
     <li><a href="search.html">Buscar</a></li>
   </ul>
-
-  <!-- Área de conta / login -->
-  <div id="nav-account">
-    <!-- Caso deslogado, será mostrado botão Entrar (renderizado por auth.js) -->
-    <!-- Caso logado, será substituído por avatar + dropdown -->
-  </div>
+  <div id="nav-account"></div>
 </nav>
-
 
 <!-- PERFIL -->
 <div class="profile-container">
-    <div class="profile-box">
-        <h2>Meu Perfil</h2>
+  <div class="profile-box">
+    <h2>Meu Perfil</h2>
 
-        <div class="profile-img-box">
-            <img id="profile-img" src="https://via.placeholder.com/120" alt="Foto de perfil">
-            <input type="file" id="upload-photo" accept="image/*">
-        </div>
-
-        <label>Nome de usuário</label>
-        <input type="text" id="username">
-
-        <label>Email (não editável)</label>
-        <input type="email" id="email" disabled>
-
-        <label>Descrição</label>
-        <textarea id="bio" rows="4" placeholder="Escreva algo sobre você..."></textarea>
-
-        <button class="save-btn" onclick="saveProfile()">Salvar Alterações</button>
+    <div class="profile-img-box">
+      <img id="profile-img" src="https://via.placeholder.com/120" alt="Foto de perfil">
+      <input type="file" id="upload-photo" accept="image/*">
     </div>
+
+    <label>Nome de usuário</label>
+    <input type="text" id="username">
+
+    <label>Email (não editável)</label>
+    <input type="email" id="email" disabled>
+
+    <label>Descrição</label>
+    <textarea id="bio" rows="4" placeholder="Escreva algo sobre você..."></textarea>
+
+    <button class="save-btn" onclick="saveProfile()">Salvar Alterações</button>
+  </div>
 </div>
 
 <script>
-// Mostrar ou esconder botões dependendo do login
-document.addEventListener("DOMContentLoaded", function () {
-    const user = JSON.parse(localStorage.getItem("sw_user"));
-    const loginBtn = document.getElementById("login-btn");
-    const profileBtn = document.getElementById("profile-btn");
-    const logoutBtn = document.getElementById("logout-btn");
+// ✅ Carregar dados do usuário ao abrir a página
+document.addEventListener("DOMContentLoaded", () => {
+  const user = JSON.parse(localStorage.getItem("sw_user"));
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
 
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
+  document.getElementById("username").value = user.username || "";
+  document.getElementById("email").value = user.email || "";
+  document.getElementById("bio").value = user.bio || "";
 
-    loginBtn.style.display = "none";
-    profileBtn.style.display = "inline-block";
-    logoutBtn.style.display = "inline-block";
-
-    // Carregar dados existentes no perfil
-    document.getElementById("username").value = user.username;
-    document.getElementById("email").value = user.email;
-    document.getElementById("bio").value = user.bio || "";
-    if (user.photo && user.photo !== "") {
-        document.getElementById("profile-img").src = user.photo;
-    }
+  document.getElementById("profile-img").src = user.photo || "https://via.placeholder.com/120";
 });
 
-// Salvar alterações do perfil
+// ✅ Salvar alterações no nome/descrição e atualizar nav
 function saveProfile() {
+  let current = JSON.parse(localStorage.getItem("sw_user"));
+  if (!current) return;
+
+  current.username = document.getElementById("username").value.trim();
+  current.bio = document.getElementById("bio").value;
+  localStorage.setItem("sw_user", JSON.stringify(current));
+
+  let users = JSON.parse(localStorage.getItem("sw_users") || "[]");
+  const index = users.findIndex(u => u.email === current.email);
+  if (index !== -1) {
+    users[index].username = current.username;
+    users[index].bio = current.bio;
+    users[index].photo = current.photo || "";
+    localStorage.setItem("sw_users", JSON.stringify(users));
+  }
+
+  window.dispatchEvent(new CustomEvent('sw:userChanged', { detail: current }));
+  alert("Perfil atualizado com sucesso!");
+}
+
+// ✅ Alterar foto + salvar
+document.getElementById("upload-photo").addEventListener("change", (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function () {
+    document.getElementById("profile-img").src = reader.result;
+
     let user = JSON.parse(localStorage.getItem("sw_user"));
-    user.username = document.getElementById("username").value;
-    user.bio = document.getElementById("bio").value;
-
+    user.photo = reader.result;
     localStorage.setItem("sw_user", JSON.stringify(user));
-    alert("Perfil atualizado com sucesso!");
-}
 
-// Alterar e salvar foto de perfil
-document.getElementById("upload-photo").addEventListener("change", function (event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function () {
-        document.getElementById("profile-img").src = reader.result;
-        let user = JSON.parse(localStorage.getItem("sw_user"));
-        user.photo = reader.result;
-        localStorage.setItem("sw_user", JSON.stringify(user));
-    };
-    if (file) reader.readAsDataURL(file);
+    let users = JSON.parse(localStorage.getItem("sw_users") || "[]");
+    const index = users.findIndex(u => u.email === user.email);
+    if (index !== -1) {
+      users[index].photo = reader.result;
+      localStorage.setItem("sw_users", JSON.stringify(users));
+    }
+
+    window.dispatchEvent(new CustomEvent('sw:userChanged', { detail: user }));
+  };
+  reader.readAsDataURL(file);
 });
-
-// Logout
-function logoutUser() {
-    localStorage.removeItem("sw_user");
-    window.location.href = "index.html";
-}
 </script>
 
 <script src="auth.js"></script>
