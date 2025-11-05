@@ -6,17 +6,34 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>StoryWorld</h1>
-  <p>Crie, leia e compartilhe histórias com o mundo!</p>
+  <!-- CABEÇALHO -->
+  <header>
+    <h1>📖 StoryWorld</h1>
+    <p>Crie, leia e compartilhe suas histórias com o mundo</p>
+  </header>
 
-  <input type="text" id="searchInput" placeholder="Buscar histórias...">
-  <button onclick="goToSearch()">Buscar</button>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar histórias...">
+      <button onclick="goToSearch()">🔍 Buscar</button>
+    </div>
 
-  <br><br>
-  <nav>
-    <a href="catalog.html">Catálogo</a> |
-    <a href="writer.html">Escrever História</a>
-  </nav>
+    <nav>
+      <a href="catalog.html">📚 Catálogo</a>
+      <a href="writer.html">✍️ Escrever História</a>
+    </nav>
+
+    <section style="text-align:center; margin-top:40px;">
+      <h2>✨ Destaques</h2>
+      <p>Explore histórias incríveis criadas por escritores do mundo todo.</p>
+    </section>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <p>© 2025 StoryWorld — Feito com ❤️ por criadores independentes</p>
+  </footer>
 
   <script>
     function goToSearch() {
