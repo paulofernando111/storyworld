@@ -229,3 +229,69 @@ footer {
     height: auto;
   }
 }
+/* ============= BOTÃO DE TEMA ============= */
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.theme-toggle {
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 1.2em;
+  padding: 8px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.3);
+  transform: rotate(15deg);
+}
+
+/* ============= DARK MODE ============= */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode header {
+  background: linear-gradient(135deg, #27293d, #1f1f2e);
+}
+
+body.dark-mode main {
+  background: #1e1e2f;
+  color: #ddd;
+}
+
+body.dark-mode nav a {
+  color: #9fa8ff;
+}
+
+body.dark-mode nav a:hover {
+  color: #c6cbff;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+  background: #2a2a3d;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+body.dark-mode button {
+  background: #5a5afc;
+}
+
+body.dark-mode .story-card {
+  background: #23233a;
+  color: #eee;
+}
+
+body.dark-mode footer {
+  color: #aaa;
+}
