@@ -1,82 +1,105 @@
-const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-if(!currentUser){
-  alert("Você precisa estar logado para escrever histórias!");
-  window.location.href = "login.html";
-}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Escrever História</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escrever | StoryWorld</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Escrever História</h1>
 
-  <form id="storyForm">
-    <label>Título:</label><br>
-    <input type="text" id="title" required><br><br>
-
-    <label>Tópico:</label><br>
-    <input type="text" id="topic" placeholder="Ex: Romance, Aventura"><br><br>
-
-    <label>URL da capa:</label><br>
-    <input type="text" id="coverUrl" placeholder="https://..."><br><br>
-
-    <label>Capítulos:</label><br>
-    <div id="chapters">
-      <textarea placeholder="Escreva o capítulo 1" rows="5"></textarea><br><br>
-    </div>
-
-    <button type="button" onclick="addChapter()">Adicionar capítulo</button><br><br>
-    <button type="submit">Salvar História</button>
-  </form>
-
-  <a href="index.html">Voltar à Página Inicial</a>
-
-  <script>
-    function addChapter() {
-      const chaptersDiv = document.getElementById('chapters');
-      const chapterCount = chaptersDiv.querySelectorAll('textarea').length + 1;
-      const newChapter = document.createElement('textarea');
-      newChapter.placeholder = `Escreva o capítulo ${chapterCount}`;
-      newChapter.rows = 5;
-      chaptersDiv.appendChild(newChapter);
-      chaptersDiv.appendChild(document.createElement('br'));
-      chaptersDiv.appendChild(document.createElement('br'));
-    }
-
-    document.getElementById('storyForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const title = document.getElementById('title').value;
-      const topic = document.getElementById('topic').value;
-      const coverUrl = document.getElementById('coverUrl').value;
-      const chapters = Array.from(document.querySelectorAll('#chapters textarea')).map(t => t.value);
-
-      const storyData = { title, topic, coverUrl, chapters };
-      const stories = JSON.parse(localStorage.getItem('stories') || '[]');
-      stories.push(storyData);
-      localStorage.setItem('stories', JSON.stringify(stories));
-
-      alert('História salva! Veja no catálogo ou use a busca.');
-    });
-  </script>
-<script src="auth.js"></script>
-</body>
-</html>
-<!-- NAVBAR (substituir em todas as páginas) -->
+<!-- ✅ NAVBAR -->
 <nav class="navbar">
   <a href="index.html" class="logo">StoryWorld</a>
 
   <ul class="nav-links">
     <li><a href="catalog.html">Catálogo</a></li>
-    <li><a href="writer.html">Escrever</a></li>
+    <li><a class="active" href="writer.html">Escrever</a></li>
     <li><a href="search.html">Buscar</a></li>
   </ul>
 
-  <!-- Área de conta / login -->
-  <div id="nav-account">
-    <!-- Caso deslogado, será mostrado botão Entrar (renderizado por auth.js) -->
-    <!-- Caso logado, será substituído por avatar + dropdown -->
-  </div>
+  <div id="nav-account"></div>
 </nav>
+
+<!-- ✅ Conteúdo principal -->
+<main class="write-container">
+  <h2>Escrever nova História</h2>
+
+  <form id="storyForm" class="write-box">
+    
+    <label for="title">Título da história</label>
+    <input type="text" id="title" placeholder="Ex: A Lenda de Arion" required>
+
+    <label for="topic">Gênero / Categoria</label>
+    <input type="text" id="topic" placeholder="Ex: Romance, Fantasia, Aventura">
+
+    <label for="coverUrl">Capa (URL da imagem)</label>
+    <input type="text" id="coverUrl" placeholder="https://exemplo.com/minha-capa.jpg">
+
+    <h3>Capítulos</h3>
+    <div id="chapters">
+      <textarea class="chapter-text" placeholder="Escreva o capítulo 1..." rows="6"></textarea>
+    </div>
+
+    <button type="button" class="secondary-btn" onclick="addChapter()">+ Adicionar capítulo</button>
+    <button type="submit" class="primary-btn">Salvar História</button>
+  </form>
+</main>
+
+<script>
+// ✅ Verifica login antes de permitir acessar
+const currentUser = JSON.parse(localStorage.getItem("sw_user"));
+if (!currentUser) {
+  alert("Você precisa estar logado para escrever histórias.");
+  window.location.href = "login.html";
+}
+
+// ✅ Adicionar novo capítulo
+function addChapter() {
+  const chaptersDiv = document.getElementById('chapters');
+  const chapterCount = chaptersDiv.querySelectorAll('textarea').length + 1;
+
+  const newChapter = document.createElement('textarea');
+  newChapter.placeholder = `Escreva o capítulo ${chapterCount}...`;
+  newChapter.rows = 6;
+  newChapter.classList.add("chapter-text");
+
+  chaptersDiv.appendChild(newChapter);
+}
+
+// ✅ Salvar história no LocalStorage
+document.getElementById('storyForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const title = document.getElementById('title').value.trim();
+  const topic = document.getElementById('topic').value.trim();
+  const coverUrl = document.getElementById('coverUrl').value.trim();
+  const chapters = Array.from(document.querySelectorAll('.chapter-text')).map(c => c.value.trim());
+
+  if (!title) {
+    alert("O título é obrigatório!");
+    return;
+  }
+
+  // Montar objeto de história
+  const newStory = {
+    title,
+    topic,
+    coverUrl,
+    chapters,
+    author: currentUser.username,
+    date: new Date().toLocaleDateString("pt-BR")
+  };
+
+  let stories = JSON.parse(localStorage.getItem("stories") || "[]");
+  stories.push(newStory);
+  localStorage.setItem("stories", JSON.stringify(stories));
+
+  alert("História salva com sucesso!");
+  window.location.href = "catalog.html";
+});
+</script>
+
+<script src="auth.js"></script>
+</body>
+</html>
