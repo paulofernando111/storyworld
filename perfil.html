@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | StoryWorld</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a href="index.html" class="logo">StoryWorld</a>
+    <ul class="nav-links">
+        <li><a href="catalog.html">Catálogo</a></li>
+        <li><a href="writer.html">Escrever</a></li>
+        <li><a href="search.html">Buscar</a></li>
+        <li id="login-btn"><a href="login.html">Login</a></li>
+        <li id="profile-btn" style="display:none;"><a href="perfil.html">Perfil</a></li>
+        <li id="logout-btn" style="display:none;"><button onclick="logoutUser()">Sair</button></li>
+    </ul>
+</nav>
+
+<!-- PERFIL -->
+<div class="profile-container">
+    <div class="profile-box">
+        <h2>Meu Perfil</h2>
+
+        <div class="profile-img-box">
+            <img id="profile-img" src="https://via.placeholder.com/120" alt="Foto de perfil">
+            <input type="file" id="upload-photo" accept="image/*">
+        </div>
+
+        <label>Nome de usuário</label>
+        <input type="text" id="username">
+
+        <label>Email (não editável)</label>
+        <input type="email" id="email" disabled>
+
+        <label>Descrição</label>
+        <textarea id="bio" rows="4" placeholder="Escreva algo sobre você..."></textarea>
+
+        <button class="save-btn" onclick="saveProfile()">Salvar Alterações</button>
+    </div>
+</div>
+
+<script>
+// Mostrar ou esconder botões dependendo do login
+document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("sw_user"));
+    const loginBtn = document.getElementById("login-btn");
+    const profileBtn = document.getElementById("profile-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    loginBtn.style.display = "none";
+    profileBtn.style.display = "inline-block";
+    logoutBtn.style.display = "inline-block";
+
+    // Carregar dados existentes no perfil
+    document.getElementById("username").value = user.username;
+    document.getElementById("email").value = user.email;
+    document.getElementById("bio").value = user.bio || "";
+    if (user.photo && user.photo !== "") {
+        document.getElementById("profile-img").src = user.photo;
+    }
+});
+
+// Salvar alterações do perfil
+function saveProfile() {
+    let user = JSON.parse(localStorage.getItem("sw_user"));
+    user.username = document.getElementById("username").value;
+    user.bio = document.getElementById("bio").value;
+
+    localStorage.setItem("sw_user", JSON.stringify(user));
+    alert("Perfil atualizado com sucesso!");
+}
+
+// Alterar e salvar foto de perfil
+document.getElementById("upload-photo").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function () {
+        document.getElementById("profile-img").src = reader.result;
+        let user = JSON.parse(localStorage.getItem("sw_user"));
+        user.photo = reader.result;
+        localStorage.setItem("sw_user", JSON.stringify(user));
+    };
+    if (file) reader.readAsDataURL(file);
+});
+
+// Logout
+function logoutUser() {
+    localStorage.removeItem("sw_user");
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
