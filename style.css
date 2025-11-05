@@ -295,3 +295,29 @@ body.dark-mode .story-card {
 body.dark-mode footer {
   color: #aaa;
 }
+/* ==== FILTROS E CATÁLOGO ==== */
+.filter-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.filter-box input {
+  flex: 1;
+  max-width: 400px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  font-size: 1em;
+}
+
+.filter-box button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
