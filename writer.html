@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Escrever História</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Escrever História</h1>
+
+  <form id="storyForm">
+    <label>Título:</label><br>
+    <input type="text" id="title" required><br><br>
+
+    <label>Tópico:</label><br>
+    <input type="text" id="topic" placeholder="Ex: Romance, Aventura"><br><br>
+
+    <label>URL da capa:</label><br>
+    <input type="text" id="coverUrl" placeholder="https://..."><br><br>
+
+    <label>Capítulos:</label><br>
+    <div id="chapters">
+      <textarea placeholder="Escreva o capítulo 1" rows="5"></textarea><br><br>
+    </div>
+
+    <button type="button" onclick="addChapter()">Adicionar capítulo</button><br><br>
+    <button type="submit">Salvar História</button>
+  </form>
+
+  <a href="index.html">Voltar à Página Inicial</a>
+
+  <script>
+    function addChapter() {
+      const chaptersDiv = document.getElementById('chapters');
+      const chapterCount = chaptersDiv.querySelectorAll('textarea').length + 1;
+      const newChapter = document.createElement('textarea');
+      newChapter.placeholder = `Escreva o capítulo ${chapterCount}`;
+      newChapter.rows = 5;
+      chaptersDiv.appendChild(newChapter);
+      chaptersDiv.appendChild(document.createElement('br'));
+      chaptersDiv.appendChild(document.createElement('br'));
+    }
+
+    document.getElementById('storyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const topic = document.getElementById('topic').value;
+      const coverUrl = document.getElementById('coverUrl').value;
+      const chapters = Array.from(document.querySelectorAll('#chapters textarea')).map(t => t.value);
+
+      const storyData = { title, topic, coverUrl, chapters };
+      const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+      stories.push(storyData);
+      localStorage.setItem('stories', JSON.stringify(stories));
+
+      alert('História salva! Veja no catálogo ou use a busca.');
+    });
+  </script>
+</body>
+</html>
