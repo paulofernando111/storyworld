@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Perfil | StoryWorld</title>
+  <title>Perfil | StoryWorld</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="perfil.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- ✅ NAVBAR -->
 <nav class="navbar">
   <a href="index.html" class="logo">StoryWorld</a>
   <ul class="nav-links">
@@ -19,121 +20,63 @@
   <div id="nav-account"></div>
 </nav>
 
-<!-- LAYOUT COM MENU -->
-<div class="profile-layout">
+<!-- ✅ CABEÇALHO DO PERFIL -->
+<header class="profile-header">
+  <div class="banner">
+    <img id="banner-img" src="https://via.placeholder.com/1200x300" alt="Capa do Perfil">
+    <input type="file" id="banner-upload" accept="image/*">
+  </div>
 
-  <!-- MENU LATERAL -->
-  <aside class="profile-sidebar">
-    <div class="sidebar-header">
-      <img id="nav-profile-pic" src="https://via.placeholder.com/80" alt="Foto">
-      <h3 id="nav-username">Usuário</h3>
+  <div class="profile-info">
+    <div class="profile-pic">
+      <img id="profile-photo" src="https://via.placeholder.com/120" alt="Foto de Perfil">
+      <input type="file" id="photo-upload" accept="image/*">
     </div>
-    <ul>
-      <li><a href="perfil.html" class="active">👤 Meu Perfil</a></li>
-      <li><a href="#">📚 Minhas Histórias</a></li>
-      <li><a href="#">❤️ Favoritos</a></li>
-      <li><a href="#">⚙️ Configurações</a></li>
-      <li><a href="#" onclick="logoutUser()">🚪 Sair</a></li>
-    </ul>
-  </aside>
-
-  <!-- CONTEÚDO DO PERFIL -->
-  <main class="profile-content">
-
-    <!-- CAPA DO PERFIL -->
-    <div class="profile-banner">
-      <img id="banner-img" src="https://via.placeholder.com/1000x300" alt="Capa do perfil">
-      <input type="file" id="banner-upload" accept="image/*">
+    <div>
+      <h2 id="profile-username">Nome do Usuário</h2>
+      <p id="profile-email">@email</p>
+      <p id="profile-bio">Nenhuma bio adicionada ainda...</p>
     </div>
 
-    <!-- FOTO DE PERFIL E INFOS -->
-    <div class="profile-info">
-      <img id="profile-img" class="avatar" src="https://via.placeholder.com/120" alt="Foto de perfil">
-      <input type="file" id="avatar-upload" accept="image/*" hidden>
+    <button id="edit-profile-btn">Editar Perfil</button>
+  </div>
+</header>
 
-      <h2 id="profile-name">Nome do Usuário</h2>
-      <p id="profile-email"></p>
-    </div>
+<!-- ✅ MENU DO PERFIL -->
+<nav class="profile-menu">
+  <button class="tab-btn active" data-tab="stories">📚 Minhas Histórias</button>
+  <button class="tab-btn" data-tab="favorites">❤️ Favoritas</button>
+  <button class="tab-btn" data-tab="playlists">🎧 Playlists</button>
+  <button class="tab-btn" data-tab="settings">⚙️ Configurações</button>
+</nav>
 
-    <!-- EDITAR BIO -->
-    <div class="profile-edit">
-      <label>Nome de usuário</label>
-      <input type="text" id="username">
+<!-- ✅ CONTEÚDO DAS ABAS -->
+<section id="tab-content">
+  <div id="stories" class="tab-content active">
+    <p>Suas histórias aparecerão aqui.</p>
+  </div>
 
-      <label>Descrição</label>
-      <textarea id="bio" rows="4" placeholder="Fale um pouco sobre você..."></textarea>
+  <div id="favorites" class="tab-content">
+    <p>Histórias favoritas aparecerão aqui.</p>
+  </div>
 
-      <button class="save-btn" onclick="saveProfile()">💾 Salvar alterações</button>
-    </div>
+  <div id="playlists" class="tab-content">
+    <p>Suas playlists de histórias aparecerão aqui.</p>
+  </div>
 
-  </main>
-</div>
+  <div id="settings" class="tab-content">
+    <h3>Editar informações do perfil</h3>
+    <label>Nome de usuário:</label>
+    <input type="text" id="edit-username">
 
+    <label>Bio:</label>
+    <textarea id="edit-bio" placeholder="Escreva algo sobre você..."></textarea>
+
+    <button id="save-profile-btn">Salvar</button>
+  </div>
+</section>
+
+<script src="perfil.js"></script>
 <script src="auth.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const user = JSON.parse(localStorage.getItem("sw_user"));
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    // Preenche os dados
-    document.getElementById("nav-profile-pic").src = user.photo || "https://via.placeholder.com/80";
-    document.getElementById("profile-img").src = user.photo || "https://via.placeholder.com/120";
-    document.getElementById("nav-username").textContent = user.username || "Usuário";
-    document.getElementById("profile-name").textContent = user.username;
-    document.getElementById("profile-email").textContent = user.email;
-    document.getElementById("username").value = user.username;
-    document.getElementById("bio").value = user.bio || "";
-    if (user.banner) document.getElementById("banner-img").src = user.banner;
-});
-
-// Salvar perfil
-function saveProfile() {
-    let user = JSON.parse(localStorage.getItem("sw_user"));
-    user.username = document.getElementById("username").value;
-    user.bio = document.getElementById("bio").value;
-    localStorage.setItem("sw_user", JSON.stringify(user));
-    alert("✅ Perfil atualizado!");
-    location.reload();
-}
-
-// Troca de avatar
-document.getElementById("profile-img").addEventListener("click", () => {
-  document.getElementById("avatar-upload").click();
-});
-document.getElementById("avatar-upload").addEventListener("change", function (e) {
-  const reader = new FileReader();
-  reader.onload = function () {
-    let user = JSON.parse(localStorage.getItem("sw_user"));
-    user.photo = reader.result;
-    localStorage.setItem("sw_user", JSON.stringify(user));
-    location.reload();
-  };
-  reader.readAsDataURL(e.target.files[0]);
-});
-
-// Troca de banner
-document.getElementById("banner-img").addEventListener("click", () => {
-  document.getElementById("banner-upload").click();
-});
-document.getElementById("banner-upload").addEventListener("change", function (e) {
-  const reader = new FileReader();
-  reader.onload = function () {
-    let user = JSON.parse(localStorage.getItem("sw_user"));
-    user.banner = reader.result;
-    localStorage.setItem("sw_user", JSON.stringify(user));
-    location.reload();
-  };
-  reader.readAsDataURL(e.target.files[0]);
-});
-
-function logoutUser() {
-    localStorage.removeItem("sw_user");
-    window.location.href = "index.html";
-}
-</script>
-
 </body>
 </html>
