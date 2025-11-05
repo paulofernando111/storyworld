@@ -10,7 +10,9 @@
   <!-- navbar -->
   <nav class="navbar">
     <a href="index.html" class="logo">StoryWorld</a>
-    <ul class="nav-links"><li><a href="catalog.html">Catálogo</a></li></ul>
+    <ul class="nav-links">
+      <li><a href="catalog.html">Catálogo</a></li>
+    </ul>
     <div id="nav-account"></div>
   </nav>
 
@@ -25,12 +27,20 @@
       <input type="password" name="password" placeholder="Digite sua senha" required>
 
       <button type="submit" class="login-btn">Entrar</button>
-      <p class="login-footer">Não tem conta? <a href="register.html">Registrar</a></p>
+
+      <!-- 🔹 Link de Esqueci minha senha -->
+      <p class="forgot-password">
+        <a href="forgot-password.html">Esqueci minha senha</a>
+      </p>
+
+      <p class="login-footer">
+        Não tem conta? <a href="register.html">Registrar</a>
+      </p>
     </form>
   </main>
 
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(e){
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const fd = new FormData(e.target);
       const email = fd.get("email").trim().toLowerCase();
@@ -44,7 +54,7 @@
         return;
       }
 
-      // set current user and redirect
+      // define usuário logado
       localStorage.setItem("sw_user", JSON.stringify(found));
       alert("Login bem-sucedido!");
       window.location.href = "index.html";
