@@ -80,3 +80,36 @@
 <script src="auth.js"></script>
 </body>
 </html>
+// ================== EXIBIR HISTÓRIAS DO USUÁRIO ==================
+function carregarMinhasHistorias() {
+  const user = JSON.parse(localStorage.getItem("sw_user"));
+  if (!user) return;
+
+  const stories = JSON.parse(localStorage.getItem("stories")) || [];
+  const minhas = stories.filter(s => s.author === user.email);
+
+  const container = document.getElementById("stories");
+  container.innerHTML = ""; // Limpa antes de inserir
+
+  if (minhas.length === 0) {
+    container.innerHTML = "<p>Você ainda não publicou nenhuma história.</p>";
+    return;
+  }
+
+  minhas.forEach(story => {
+    const card = document.createElement("div");
+    card.classList.add("story-card");
+
+    card.innerHTML = `
+      <img src="${story.cover || 'https://via.placeholder.com/200'}" alt="Capa da história">
+      <h3>${story.title}</h3>
+      <p>${story.description || 'Sem descrição...'}</p>
+      <button onclick="window.location.href='view.html?id=${story.id}'">Ler ➝</button>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+// Chama ao carregar a página
+document.addEventListener("DOMContentLoaded", carregarMinhasHistorias);
