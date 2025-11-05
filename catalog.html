@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Catálogo de Histórias</h1>
+  <div id="catalog"></div>
+  <a href="index.html">Voltar à Página Inicial</a>
+
+  <script>
+    const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+    const grouped = stories.reduce((acc, story) => {
+      if (!acc[story.topic]) acc[story.topic] = [];
+      acc[story.topic].push(story);
+      return acc;
+    }, {});
+
+    const catalogDiv = document.getElementById('catalog');
+    let html = '';
+    for (const topic in grouped) {
+      html += `<h2>${topic}</h2><div>`;
+      grouped[topic].forEach(story => {
+        html += `
+          <div style="display:inline-block; margin:10px;">
+            <img src="${story.coverUrl}" alt="${story.title}" width="100"><br>
+            <b>${story.title}</b>
+          </div>
+        `;
+      });
+      html += '</div>';
+    }
+    catalogDiv.innerHTML = html;
+  </script>
+</body>
+</html>
