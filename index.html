@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>StoryWorld</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>StoryWorld</h1>
+  <p>Crie, leia e compartilhe histórias com o mundo!</p>
+
+  <input type="text" id="searchInput" placeholder="Buscar histórias...">
+  <button onclick="goToSearch()">Buscar</button>
+
+  <br><br>
+  <nav>
+    <a href="catalog.html">Catálogo</a> |
+    <a href="writer.html">Escrever História</a>
+  </nav>
+
+  <script>
+    function goToSearch() {
+      const query = document.getElementById('searchInput').value;
+      window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') goToSearch();
+    });
+  </script>
+</body>
+</html>
