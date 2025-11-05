@@ -22,10 +22,23 @@
 
     <div id="catalogContainer"></div>
 
-    <nav>
-      <a href="index.html">🏠 Início</a>
-      <a href="writer.html">✍️ Escrever</a>
-    </nav>
+    <!-- NAVBAR (substituir em todas as páginas) -->
+<nav class="navbar">
+  <a href="index.html" class="logo">StoryWorld</a>
+
+  <ul class="nav-links">
+    <li><a href="catalog.html">Catálogo</a></li>
+    <li><a href="writer.html">Escrever</a></li>
+    <li><a href="search.html">Buscar</a></li>
+  </ul>
+
+  <!-- Área de conta / login -->
+  <div id="nav-account">
+    <!-- Caso deslogado, será mostrado botão Entrar (renderizado por auth.js) -->
+    <!-- Caso logado, será substituído por avatar + dropdown -->
+  </div>
+</nav>
+
   </main>
 
   <footer>
