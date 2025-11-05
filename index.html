@@ -6,92 +6,103 @@
   <title>StoryWorld</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<header>
-  <div class="header-content">
-    <h1>StoryWorld</h1>
-    <button id="themeToggle" class="theme-toggle">🌙</button>
-  </div>
-  <p>Crie, leia e compartilhe histórias incríveis ✨</p>
-</header>
+  <!-- HEADER com tema -->
+  <header>
+    <div class="header-content">
+      <h1>StoryWorld</h1>
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+    </div>
+    <p>Crie, leia e compartilhe histórias incríveis ✨</p>
+  </header>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-  <a href="index.html" class="logo">StoryWorld</a>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">StoryWorld</a>
 
-  <ul class="nav-links">
-    <li><a href="catalog.html">Catálogo</a></li>
-    <li><a href="writer.html">Escrever</a></li>
-    <li><a href="search.html">Buscar</a></li>
-  </ul>
+    <ul class="nav-links">
+      <li><a href="catalog.html">Catálogo</a></li>
+      <li><a href="writer.html">Escrever</a></li>
+      <li><a href="search.html">Buscar</a></li>
+    </ul>
 
-  <!-- Área de login/perfil dinamicamente -->
-  <div id="nav-account"></div>
-</nav>
+    <!-- Botão de login/perfil -->
+    <div id="nav-account"></div>
+  </nav>
 
-<main>
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Buscar histórias...">
-    <button onclick="goToSearch()">🔍</button>
-  </div>
+  <!-- CAMPO DE BUSCA -->
+  <main>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Buscar histórias...">
+      <button onclick="goToSearch()">🔍</button>
+    </div>
 
-  <section>
-    <h2>Destaques da Semana</h2>
-    <p>Veja as histórias mais lidas pelos leitores do StoryWorld!</p>
-  </section>
-</main>
+    <section>
+      <h2>Destaques da Semana</h2>
+      <p>Veja as histórias mais lidas pelos leitores do StoryWorld!</p>
+    </section>
+  </main>
 
-<footer>
-  <p>© 2025 StoryWorld — Transformando histórias em mundos 🌍</p>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 StoryWorld — Transformando histórias em mundos 🌍</p>
+  </footer>
 
-<script>
-  // --- Dark Mode ---
-  const themeToggle = document.getElementById('themeToggle');
-  if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark-mode');
-    themeToggle.textContent = '☀️';
-  }
-  themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    themeToggle.textContent = isDark ? '☀️' : '🌙';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  });
+  <!-- SCRIPT: Tema claro/escuro -->
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
 
-  // --- Busca ---
-  function goToSearch() {
-    const query = document.getElementById('searchInput').value;
-    window.location.href = `search.html?query=${encodeURIComponent(query)}`;
-  }
-  document.getElementById('searchInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') goToSearch();
-  });
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+      themeToggle.textContent = '☀️';
+    }
 
-  // --- Mostrar perfil ou login ---
-  const navAccount = document.getElementById('nav-account');
-  const user = JSON.parse(localStorage.getItem("sw_user"));
-
-  if (!user) {
-    navAccount.innerHTML = `<a href="login.html" class="login-btn">Entrar</a>`;
-  } else {
-    navAccount.innerHTML = `
-      <div class="user-menu">
-        <img src="${user.photo || 'https://i.imgur.com/EPYxQ4x.png'}" class="user-avatar">
-        <span class="username">${user.username}</span>
-        <div class="dropdown">
-          <a href="perfil.html">Meu Perfil</a>
-          <a href="#" id="logout-btn">Sair</a>
-        </div>
-      </div>
-    `;
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      localStorage.removeItem('sw_user');
-      window.location.reload();
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
-  }
-</script>
+  </script>
 
-<script src="auth.js"></script>
+  <!-- SCRIPT: Busca -->
+  <script>
+    function goToSearch() {
+      const query = document.getElementById('searchInput').value;
+      window.location.href = `search.html?query=${encodeURIComponent(query)}`;
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') goToSearch();
+    });
+  </script>
+
+  <!-- SCRIPT: Login/Perfil -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = JSON.parse(localStorage.getItem("sw_user"));
+      const navAccount = document.getElementById("nav-account");
+
+      if (user) {
+        navAccount.innerHTML = `
+          <button class="profile-btn" onclick="window.location.href='perfil.html'">
+            <img src="${user.photo || 'https://via.placeholder.com/40'}" class="profile-icon" alt="Perfil">
+          </button>
+        `;
+      } else {
+        navAccount.innerHTML = `
+          <button class="login-btn" onclick="window.location.href='login.html'">
+            Entrar
+          </button>
+        `;
+      }
+    });
+  </script>
+
+  <!-- SCRIPT: Autenticação global (logout, dropdown etc.) -->
+  <script src="auth.js"></script>
 </body>
 </html>
