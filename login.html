@@ -1,60 +1,65 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entrar | StoryWorld</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Login / Cadastro - StoryWorld</title>
+  <style>
+    body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .container { display:flex; flex-direction:column; gap:10px; }
+    input, button { padding:10px; font-size:16px; }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="header-content">
-      <h1>Login</h1>
-      <button id="themeToggle" class="theme-toggle">🌙</button>
-    </div>
-  </header>
-
-  <main>
-    <form id="loginForm">
-      <label for="username">Nome de Usuário</label>
-      <input type="text" id="username" required placeholder="Seu nome de usuário">
-
-      <label for="password">Senha</label>
-      <input type="password" id="password" required placeholder="Sua senha">
-
-      <button type="submit">Entrar</button>
-      <p style="text-align:center; margin-top:10px;">Ainda não tem conta? <a href="#">Cadastre-se</a></p>
-    </form>
-  </main>
-
-  <footer>
-    <p>© 2025 StoryWorld — Onde histórias ganham vida</p>
-  </footer>
+  <div class="container">
+    <h2>Login / Cadastro</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="username" placeholder="Nome de usuário">
+    <input type="password" id="password" placeholder="Senha">
+    <button onclick="register()">Cadastrar</button>
+    <button onclick="login()">Entrar</button>
+    <p id="message"></p>
+  </div>
 
   <script>
-    // Dark mode
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      body.classList.add('dark-mode');
-      themeToggle.textContent = '☀️';
-    }
-    themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark-mode');
-      const isDark = body.classList.contains('dark-mode');
-      themeToggle.textContent = isDark ? '☀️' : '🌙';
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
+    function register() {
+      const email = document.getElementById('email').value;
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
 
-    // Simples login
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const user = document.getElementById('username').value;
-      localStorage.setItem('currentUser', user);
-      alert(`Bem-vindo, ${user}!`);
-      window.location.href = 'index.html';
-    });
+      if(!email || !username || !password){
+        document.getElementById('message').textContent = "Preencha todos os campos!";
+        return;
+      }
+
+      // Salva usuário no localStorage
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+      if(users.find(u => u.email === email)){
+        document.getElementById('message').textContent = "Email já cadastrado!";
+        return;
+      }
+
+      users.push({email, username, password, premium:false});
+      localStorage.setItem('users', JSON.stringify(users));
+      document.getElementById('message').textContent = "Cadastro realizado com sucesso!";
+    }
+
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if(user){
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        document.getElementById('message').textContent = "Login realizado!";
+        // Redireciona pra página inicial ou de escrita
+        setTimeout(()=> window.location.href='index.html', 1000);
+      } else {
+        document.getElementById('message').textContent = "Email ou senha incorretos!";
+      }
+    }
   </script>
 </body>
 </html>
