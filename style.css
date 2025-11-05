@@ -711,3 +711,52 @@ body.dark-mode footer {
   font-weight: bold;
   border-bottom: 2px solid #6c63ff;
 }
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-menu .dropdown {
+  display: none;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  min-width: 140px;
+  padding: 8px 0;
+}
+
+.user-menu:hover .dropdown {
+  display: block;
+}
+
+.dropdown a {
+  display: block;
+  padding: 8px 15px;
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown a:hover {
+  background: #f0f0f0;
+}
+
+.login-btn {
+  background: #ff6b00;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+}
