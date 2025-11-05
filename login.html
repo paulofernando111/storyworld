@@ -1,91 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | StoryWorld</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login | StoryWorld</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">StoryWorld</a>
+    <ul class="nav-links"><li><a href="catalog.html">Catálogo</a></li></ul>
+    <div id="nav-account"></div>
+  </nav>
 
-<!-- NAVBAR (substituir em todas as páginas) -->
-<nav class="navbar">
-  <a href="index.html" class="logo">StoryWorld</a>
-
-  <ul class="nav-links">
-    <li><a href="catalog.html">Catálogo</a></li>
-    <li><a href="writer.html">Escrever</a></li>
-    <li><a href="search.html">Buscar</a></li>
-  </ul>
-
-  <!-- Área de conta / login -->
-  <div id="nav-account">
-    <!-- Caso deslogado, será mostrado botão Entrar (renderizado por auth.js) -->
-    <!-- Caso logado, será substituído por avatar + dropdown -->
-  </div>
-</nav>
-
-
-<!-- LOGIN CONTAINER -->
-<div class="login-container">
+  <main class="login-container">
     <form id="loginForm" class="login-box">
-        <h2 class="login-title">Entrar</h2>
+      <h2 class="login-title">Entrar</h2>
 
-        <label>Email</label>
-        <input type="email" name="email" placeholder="Digite seu email" required>
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Digite seu email" required>
 
-        <label>Nome de Usuário</label>
-        <input type="text" name="username" placeholder="Ex: joao_escritor" required>
+      <label>Senha</label>
+      <input type="password" name="password" placeholder="Digite sua senha" required>
 
-        <label>Senha</label>
-        <input type="password" name="password" placeholder="Digite sua senha" required>
-
-        <button type="submit" class="login-btn">Entrar</button>
-
-        <p class="login-footer">
-            Não tem uma conta? <a href="#">Registrar</a> (em breve)
-        </p>
+      <button type="submit" class="login-btn">Entrar</button>
+      <p class="login-footer">Não tem conta? <a href="register.html">Registrar</a></p>
     </form>
-</div>
+  </main>
 
-<script>
-// Verificar se está logado ao carregar a página
-document.addEventListener("DOMContentLoaded", function () {
-    const user = JSON.parse(localStorage.getItem("sw_user"));
-    const loginBtn = document.getElementById("login-btn");
-    const profileBtn = document.getElementById("profile-btn");
-    const logoutBtn = document.getElementById("logout-btn");
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const email = fd.get("email").trim().toLowerCase();
+      const password = fd.get("password");
 
-    if (user) {
-        loginBtn.style.display = "none";
-        profileBtn.style.display = "inline-block";
-        logoutBtn.style.display = "inline-block";
-    }
-});
+      const users = JSON.parse(localStorage.getItem("sw_users") || "[]");
+      const found = users.find(u => u.email === email && u.password === password);
 
-// Login e salvar no localStorage
-document.getElementById("loginForm").addEventListener("submit", function (e) {
-    e.preventDefault();
+      if (!found) {
+        alert("Email ou senha inválidos. Se ainda não tem conta, registre-se.");
+        return;
+      }
 
-    const email = e.target.email.value;
-    const username = e.target.username.value;
-    const password = e.target.password.value;
+      // set current user and redirect
+      localStorage.setItem("sw_user", JSON.stringify(found));
+      alert("Login bem-sucedido!");
+      window.location.href = "index.html";
+    });
+  </script>
 
-    const user = { email, username, password, bio: "", photo: "" };
-
-    localStorage.setItem("sw_user", JSON.stringify(user));
-
-    alert("Login realizado com sucesso!");
-    window.location.href = "index.html";
-});
-
-// Logout
-function logoutUser() {
-    localStorage.removeItem("sw_user");
-    window.location.href = "index.html";
-}
-<script src="auth.js"></script>
-</script>
-
+  <script src="auth.js"></script>
 </body>
 </html>
