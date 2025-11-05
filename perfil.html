@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil | StoryWorld</title>
+  <title>Meu Perfil | StoryWorld</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAVBAR (igual em todas as páginas, gerenciado pelo auth.js) -->
+<!-- NAVBAR -->
 <nav class="navbar">
   <a href="index.html" class="logo">StoryWorld</a>
   <ul class="nav-links">
@@ -19,93 +19,121 @@
   <div id="nav-account"></div>
 </nav>
 
-<!-- PERFIL -->
-<div class="profile-container">
-  <div class="profile-box">
-    <h2>Meu Perfil</h2>
+<!-- LAYOUT COM MENU -->
+<div class="profile-layout">
 
-    <div class="profile-img-box">
-      <img id="profile-img" src="https://via.placeholder.com/120" alt="Foto de perfil">
-      <input type="file" id="upload-photo" accept="image/*">
+  <!-- MENU LATERAL -->
+  <aside class="profile-sidebar">
+    <div class="sidebar-header">
+      <img id="nav-profile-pic" src="https://via.placeholder.com/80" alt="Foto">
+      <h3 id="nav-username">Usuário</h3>
+    </div>
+    <ul>
+      <li><a href="perfil.html" class="active">👤 Meu Perfil</a></li>
+      <li><a href="#">📚 Minhas Histórias</a></li>
+      <li><a href="#">❤️ Favoritos</a></li>
+      <li><a href="#">⚙️ Configurações</a></li>
+      <li><a href="#" onclick="logoutUser()">🚪 Sair</a></li>
+    </ul>
+  </aside>
+
+  <!-- CONTEÚDO DO PERFIL -->
+  <main class="profile-content">
+
+    <!-- CAPA DO PERFIL -->
+    <div class="profile-banner">
+      <img id="banner-img" src="https://via.placeholder.com/1000x300" alt="Capa do perfil">
+      <input type="file" id="banner-upload" accept="image/*">
     </div>
 
-    <label>Nome de usuário</label>
-    <input type="text" id="username">
+    <!-- FOTO DE PERFIL E INFOS -->
+    <div class="profile-info">
+      <img id="profile-img" class="avatar" src="https://via.placeholder.com/120" alt="Foto de perfil">
+      <input type="file" id="avatar-upload" accept="image/*" hidden>
 
-    <label>Email (não editável)</label>
-    <input type="email" id="email" disabled>
+      <h2 id="profile-name">Nome do Usuário</h2>
+      <p id="profile-email"></p>
+    </div>
 
-    <label>Descrição</label>
-    <textarea id="bio" rows="4" placeholder="Escreva algo sobre você..."></textarea>
+    <!-- EDITAR BIO -->
+    <div class="profile-edit">
+      <label>Nome de usuário</label>
+      <input type="text" id="username">
 
-    <button class="save-btn" onclick="saveProfile()">Salvar Alterações</button>
-  </div>
+      <label>Descrição</label>
+      <textarea id="bio" rows="4" placeholder="Fale um pouco sobre você..."></textarea>
+
+      <button class="save-btn" onclick="saveProfile()">💾 Salvar alterações</button>
+    </div>
+
+  </main>
 </div>
 
+<script src="auth.js"></script>
 <script>
-// ✅ Carregar dados do usuário ao abrir a página
-document.addEventListener("DOMContentLoaded", () => {
-  const user = JSON.parse(localStorage.getItem("sw_user"));
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
+document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("sw_user"));
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
 
-  document.getElementById("username").value = user.username || "";
-  document.getElementById("email").value = user.email || "";
-  document.getElementById("bio").value = user.bio || "";
-
-  document.getElementById("profile-img").src = user.photo || "https://via.placeholder.com/120";
+    // Preenche os dados
+    document.getElementById("nav-profile-pic").src = user.photo || "https://via.placeholder.com/80";
+    document.getElementById("profile-img").src = user.photo || "https://via.placeholder.com/120";
+    document.getElementById("nav-username").textContent = user.username || "Usuário";
+    document.getElementById("profile-name").textContent = user.username;
+    document.getElementById("profile-email").textContent = user.email;
+    document.getElementById("username").value = user.username;
+    document.getElementById("bio").value = user.bio || "";
+    if (user.banner) document.getElementById("banner-img").src = user.banner;
 });
 
-// ✅ Salvar alterações no nome/descrição e atualizar nav
+// Salvar perfil
 function saveProfile() {
-  let current = JSON.parse(localStorage.getItem("sw_user"));
-  if (!current) return;
-
-  current.username = document.getElementById("username").value.trim();
-  current.bio = document.getElementById("bio").value;
-  localStorage.setItem("sw_user", JSON.stringify(current));
-
-  let users = JSON.parse(localStorage.getItem("sw_users") || "[]");
-  const index = users.findIndex(u => u.email === current.email);
-  if (index !== -1) {
-    users[index].username = current.username;
-    users[index].bio = current.bio;
-    users[index].photo = current.photo || "";
-    localStorage.setItem("sw_users", JSON.stringify(users));
-  }
-
-  window.dispatchEvent(new CustomEvent('sw:userChanged', { detail: current }));
-  alert("Perfil atualizado com sucesso!");
+    let user = JSON.parse(localStorage.getItem("sw_user"));
+    user.username = document.getElementById("username").value;
+    user.bio = document.getElementById("bio").value;
+    localStorage.setItem("sw_user", JSON.stringify(user));
+    alert("✅ Perfil atualizado!");
+    location.reload();
 }
 
-// ✅ Alterar foto + salvar
-document.getElementById("upload-photo").addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
+// Troca de avatar
+document.getElementById("profile-img").addEventListener("click", () => {
+  document.getElementById("avatar-upload").click();
+});
+document.getElementById("avatar-upload").addEventListener("change", function (e) {
   const reader = new FileReader();
   reader.onload = function () {
-    document.getElementById("profile-img").src = reader.result;
-
     let user = JSON.parse(localStorage.getItem("sw_user"));
     user.photo = reader.result;
     localStorage.setItem("sw_user", JSON.stringify(user));
-
-    let users = JSON.parse(localStorage.getItem("sw_users") || "[]");
-    const index = users.findIndex(u => u.email === user.email);
-    if (index !== -1) {
-      users[index].photo = reader.result;
-      localStorage.setItem("sw_users", JSON.stringify(users));
-    }
-
-    window.dispatchEvent(new CustomEvent('sw:userChanged', { detail: user }));
+    location.reload();
   };
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(e.target.files[0]);
 });
+
+// Troca de banner
+document.getElementById("banner-img").addEventListener("click", () => {
+  document.getElementById("banner-upload").click();
+});
+document.getElementById("banner-upload").addEventListener("change", function (e) {
+  const reader = new FileReader();
+  reader.onload = function () {
+    let user = JSON.parse(localStorage.getItem("sw_user"));
+    user.banner = reader.result;
+    localStorage.setItem("sw_user", JSON.stringify(user));
+    location.reload();
+  };
+  reader.readAsDataURL(e.target.files[0]);
+});
+
+function logoutUser() {
+    localStorage.removeItem("sw_user");
+    window.location.href = "index.html";
+}
 </script>
 
-<script src="auth.js"></script>
 </body>
 </html>
