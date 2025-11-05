@@ -656,3 +656,58 @@ body.dark-mode footer {
 .forgot-password a:hover {
   text-decoration: underline;
 }
+/* Página de escrever */
+.write-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.write-box {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.write-box input, .write-box textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+}
+
+.write-box textarea {
+  resize: vertical;
+}
+
+.primary-btn {
+  background: #6c63ff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.secondary-btn {
+  background: #ddd;
+  color: #333;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.primary-btn:hover { opacity: 0.9; }
+.secondary-btn:hover { background: #ccc; }
+
+.nav-links a.active {
+  font-weight: bold;
+  border-bottom: 2px solid #6c63ff;
+}
